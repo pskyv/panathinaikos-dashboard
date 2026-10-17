@@ -1,0 +1,572 @@
+<style>
+#dash-root .pao{font-family:var(--font-anthropic-sans);display:flex;flex-direction:column;gap:var(--cds-gap-lg);max-width:84rem;margin-inline:auto}
+.pao h1{font-family:var(--font-anthropic-serif);font-weight:400;font-size:var(--cds-font-size-title);margin:0;line-height:1.2}
+.pao .lede{color:var(--color-fg-muted);margin:var(--cds-gap-xs) 0 0;font-size:var(--cds-font-size-body);line-height:1.5}
+.pao .lede b{font-weight:var(--cds-font-weight-medium);color:var(--color-fg)}
+.pao .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,10rem),1fr));gap:var(--cds-gap-md)}
+.pao .card{background:var(--color-panel);border:1px solid var(--color-border-line);border-radius:var(--cds-radius);padding:var(--cds-pad-lg);min-width:0}
+.pao .lbl{font-size:var(--cds-font-size-caption);color:var(--color-fg-muted)}
+.pao .big{font-family:var(--font-anthropic-serif);font-weight:400;font-size:var(--cds-font-size-title);line-height:1.15;font-variant-numeric:tabular-nums;margin-top:var(--cds-gap-xs)}
+.pao .sub{font-size:var(--cds-font-size-caption);color:var(--color-fg-muted);margin-top:var(--cds-gap-xs)}
+.pao .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,22rem),1fr));gap:var(--cds-gap-md)}
+.pao .grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,18rem),1fr));gap:var(--cds-gap-md)}
+.pao h2{font-size:var(--cds-font-size-heading);font-weight:var(--cds-font-weight-medium);margin:0}
+.pao h3.sec{font-size:var(--cds-font-size-caption);font-weight:var(--cds-font-weight-medium);color:var(--color-fg-muted);text-transform:uppercase;letter-spacing:.06em;margin:var(--cds-gap-sm) 0 calc(-1 * var(--cds-gap-sm))}
+.pao .note{font-size:var(--cds-font-size-caption);color:var(--color-fg-muted);margin:var(--cds-gap-xs) 0 var(--cds-gap-md);line-height:1.45}
+.pao .mhead{display:flex;justify-content:space-between;align-items:center;gap:var(--cds-gap-sm)}
+.pao .scoreline{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:var(--cds-gap-md);margin:var(--cds-gap-md) 0}
+.pao .scoreline .t{font-size:var(--cds-font-size-body);font-weight:var(--cds-font-weight-medium);line-height:1.3}
+.pao .scoreline .t.h{text-align:right}
+.pao .scoreline .s{font-family:var(--font-anthropic-serif);font-size:var(--cds-font-size-title);font-variant-numeric:tabular-nums;white-space:nowrap}
+.pao .scoreline .vs{font-family:var(--font-anthropic-serif);font-size:var(--cds-font-size-title);color:var(--color-fg-muted)}
+.pao .meta{font-size:var(--cds-font-size-caption);color:var(--color-fg-muted);line-height:1.5}
+.pao .meta .row{display:flex;gap:var(--cds-gap-xs);flex-wrap:wrap}
+.pao .chip{display:inline-flex;align-items:center;justify-content:center;border-radius:999px;padding:2px 10px;font-size:var(--cds-font-size-caption);font-weight:var(--cds-font-weight-medium);white-space:nowrap}
+.pao .r-Ν{color:var(--color-ok);background:color-mix(in srgb,var(--color-ok) 16%,transparent)}
+.pao .r-Ι{color:var(--color-warn);background:color-mix(in srgb,var(--color-warn) 16%,transparent)}
+.pao .r-Η{color:var(--color-bad);background:color-mix(in srgb,var(--color-bad) 16%,transparent)}
+.pao .countdown{color:var(--color-fg);background:color-mix(in srgb,var(--color-fg) 8%,transparent)}
+.pao .form{display:flex;gap:6px;margin-top:var(--cds-gap-sm);min-height:2.6rem}
+.pao .form .f{display:flex;flex-direction:column;align-items:center;gap:2px;flex:1;min-width:0}
+.pao .form .dot{width:1.75rem;height:1.75rem;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:var(--cds-font-size-caption);font-weight:var(--cds-font-weight-medium)}
+.pao .form .cap{font-size:10px;color:var(--color-fg-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.pao .tablebox{max-height:26rem;overflow:auto}
+.pao table{width:100%;border-collapse:collapse;font-size:var(--cds-font-size-caption);font-variant-numeric:tabular-nums}
+.pao th{text-align:left;font-weight:var(--cds-font-weight-medium);color:var(--color-fg-muted);padding:6px 8px;border-bottom:1px solid var(--color-border-line);position:sticky;top:0;background:var(--color-panel);white-space:nowrap}
+.pao td{padding:7px 8px;border-bottom:1px solid var(--color-border-line);white-space:nowrap}
+.pao td.wrap{white-space:normal}
+.pao th.n,.pao td.n{text-align:right}
+.pao tr.me td{background:color-mix(in srgb,var(--color-ok) 12%,transparent);font-weight:var(--cds-font-weight-medium)}
+.pao tr.me td:first-child{box-shadow:inset 3px 0 0 var(--color-ok)}
+.pao .filters{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:var(--cds-gap-sm)}
+.pao .filters button{font:inherit;font-size:var(--cds-font-size-caption);border:1px solid var(--color-border-line);background:transparent;color:var(--color-fg-muted);border-radius:999px;padding:3px 10px;cursor:pointer}
+.pao .filters button[aria-pressed=true]{background:var(--color-fg);color:var(--color-bg);border-color:var(--color-fg)}
+.pao .chart{position:relative;width:100%}
+.pao .tip{position:absolute;pointer-events:none;background:var(--cds-surface-popover);border:1px solid var(--cds-border);border-radius:var(--cds-radius);box-shadow:var(--cds-shadow-popover);padding:var(--cds-pad-xs) var(--cds-pad-sm);font-size:var(--cds-font-size-caption);white-space:nowrap;opacity:0;z-index:2}
+.pao .tip .k{color:var(--cds-text-secondary)}
+.pao .failed{display:flex;align-items:center;justify-content:center;gap:6px;color:var(--color-fg-muted);font-size:var(--cds-font-size-caption);min-height:inherit;height:100%}
+.pao .failed::before{content:"";width:.375rem;height:.375rem;border-radius:50%;background:var(--color-bad)}
+.pao .foot{font-size:var(--cds-font-size-caption);color:var(--color-fg-muted);line-height:1.5}
+.pao [data-dash-source-state=empty]{color:transparent}
+.pao [data-dash-source-state=refreshing]{opacity:.5;transition:opacity var(--cds-dur-slow)}
+.pao .topbar{display:flex;justify-content:space-between;align-items:flex-start;gap:var(--cds-gap-md);flex-wrap:wrap}
+.pao .refresh[hidden]{display:none}
+.pao .refresh{display:flex;flex-direction:column;align-items:flex-end;gap:4px}
+.pao .refresh button{font:inherit;font-size:var(--cds-font-size-caption);font-weight:var(--cds-font-weight-medium);border:1px solid var(--color-border-line);background:var(--color-panel);color:var(--color-fg);border-radius:999px;padding:6px 14px;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+.pao .refresh button:disabled{opacity:.55;cursor:default}
+.pao .refresh .msg{font-size:var(--cds-font-size-caption);color:var(--color-fg-muted);max-width:22rem;text-align:right}
+.pao .legend{display:flex;gap:var(--cds-gap-md);flex-wrap:wrap;font-size:var(--cds-font-size-caption);color:var(--color-fg-muted);margin-bottom:var(--cds-gap-sm)}
+.pao .legend span{display:inline-flex;align-items:center;gap:6px}
+.pao .legend i{width:10px;height:10px;border-radius:2px;display:inline-block}
+.pao .z1{background:var(--color-ok)}.pao .z2{background:var(--color-warn)}.pao .z3{background:var(--cds-chart-muted)}
+.pao tr.zone1 td:first-child{box-shadow:inset 3px 0 0 var(--color-ok)}
+.pao tr.zone2 td:first-child{box-shadow:inset 3px 0 0 var(--color-warn)}
+.pao tr.zone3 td:first-child{box-shadow:inset 3px 0 0 var(--cds-chart-muted)}
+.pao tr.me.zone1 td:first-child,.pao tr.me.zone2 td:first-child,.pao tr.me.zone3 td:first-child{box-shadow:inset 5px 0 0 var(--color-ok)}
+@media (max-width:560px){.pao .opt{display:none}.pao .refresh{align-items:flex-start}.pao .refresh .msg{text-align:left}}
+</style>
+
+<div class="pao">
+  <header id="top">
+    <div class="topbar">
+      <h1>Παναθηναϊκός · Σεζόν 2026–27</h1>
+      <div class="refresh" id="refresh" hidden>
+        <button type="button" id="refresh-btn">↻ Ανανέωση τώρα</button>
+        <div class="msg" id="refresh-msg">Αυτόματα κάθε Δευτέρα και Παρασκευή, 08:00</div>
+      </div>
+    </div>
+    <p class="lede" id="takeaway">
+      Ο Παναθηναϊκός είναι <b><span data-source="standings" data-where="team=Παναθηναϊκός" data-field="pos" class="dash-skeleton">—</span>ος</b> στη Super League με
+      <b><span data-source="standings" data-where="team=Παναθηναϊκός" data-field="pts" class="dash-skeleton">—</span> βαθμούς</b>,
+      <span data-source="league_gap" data-row="0" data-field="lead" class="dash-skeleton">—</span>
+      <span data-source="league_gap" data-row="0" data-field="vs" class="dash-skeleton">—</span>.
+      Επόμενος αγώνας: <b><span data-source="last_next" data-where="kind=next" data-field="home" class="dash-skeleton">—</span> – <span data-source="last_next" data-where="kind=next" data-field="away" class="dash-skeleton">—</span></b>,
+      <span data-source="last_next" data-where="kind=next" data-field="dateLabel" class="dash-skeleton">—</span>
+      <span data-source="last_next" data-where="kind=next" data-field="time" class="dash-skeleton">—</span>.
+    </p>
+  </header>
+
+  <section class="kpis" id="kpis">
+    <div class="card kpi" id="kpi-pos">
+      <div class="lbl">Θέση στη βαθμολογία</div>
+      <div class="big"><span data-source="standings" data-where="team=Παναθηναϊκός" data-field="pos" class="dash-skeleton">—</span>η</div>
+      <div class="sub">μετά από <span data-source="standings" data-where="team=Παναθηναϊκός" data-field="gp" class="dash-skeleton">—</span> αγωνιστικές</div>
+    </div>
+    <div class="card kpi" id="kpi-pts">
+      <div class="lbl">Βαθμοί</div>
+      <div class="big"><span data-source="standings" data-where="team=Παναθηναϊκός" data-field="pts" class="dash-skeleton">—</span></div>
+      <div class="sub"><span data-source="pao_record" data-row="0" data-field="ppg" class="dash-skeleton">—</span> ανά αγώνα</div>
+    </div>
+    <div class="card kpi" id="kpi-record">
+      <div class="lbl">Ν – Ι – Η (πρωτάθλημα)</div>
+      <div class="big"><span data-source="pao_record" data-row="0" data-field="w" class="dash-skeleton">—</span>–<span data-source="pao_record" data-row="0" data-field="d" class="dash-skeleton">—</span>–<span data-source="pao_record" data-row="0" data-field="l" class="dash-skeleton">—</span></div>
+      <div class="sub">Εντός <span data-source="pao_record" data-row="0" data-field="homeRec" class="dash-skeleton">—</span> · Εκτός <span data-source="pao_record" data-row="0" data-field="awayRec" class="dash-skeleton">—</span></div>
+    </div>
+    <div class="card kpi" id="kpi-goals">
+      <div class="lbl">Γκολ υπέρ – κατά</div>
+      <div class="big"><span data-source="standings" data-where="team=Παναθηναϊκός" data-field="gf" class="dash-skeleton">—</span>–<span data-source="standings" data-where="team=Παναθηναϊκός" data-field="ga" class="dash-skeleton">—</span></div>
+      <div class="sub"><span data-source="pao_record" data-row="0" data-field="cs" class="dash-skeleton">—</span> αγώνες χωρίς παθητικό</div>
+    </div>
+    <div class="card kpi" id="kpi-form">
+      <div class="lbl">Φόρμα · 5 τελευταίοι (όλες οι διοργανώσεις)</div>
+      <div class="form" id="form5" data-source="form5"></div>
+    </div>
+  </section>
+
+  <h3 class="sec">Αγώνες</h3>
+  <section class="grid" id="matches-now">
+    <div class="card" id="last-match">
+      <div class="mhead"><h2>Τελευταίος αγώνας</h2><span class="chip dash-skeleton" id="last-res" data-source="last_next" data-where="kind=last" data-field="resLabel">—</span></div>
+      <div class="scoreline">
+        <div class="t h" data-source="last_next" data-where="kind=last" data-field="home">—</div>
+        <div class="s"><span data-source="last_next" data-where="kind=last" data-field="hg" class="dash-skeleton">—</span>–<span data-source="last_next" data-where="kind=last" data-field="ag" class="dash-skeleton">—</span></div>
+        <div class="t" data-source="last_next" data-where="kind=last" data-field="away">—</div>
+      </div>
+      <div class="meta">
+        <div class="row"><span data-source="last_next" data-where="kind=last" data-field="dateLabel">—</span>·<span data-source="last_next" data-where="kind=last" data-field="comp">—</span>·<span data-source="last_next" data-where="kind=last" data-field="stage">—</span></div>
+        <div class="row" data-source="last_next" data-where="kind=last" data-field="notes">—</div>
+      </div>
+    </div>
+    <div class="card" id="next-match">
+      <div class="mhead"><h2>Επόμενος αγώνας</h2><span class="chip countdown" id="countdown"></span></div>
+      <div class="scoreline">
+        <div class="t h" data-source="last_next" data-where="kind=next" data-field="home">—</div>
+        <div class="vs" data-source="last_next" data-where="kind=next" data-field="time">—</div>
+        <div class="t" data-source="last_next" data-where="kind=next" data-field="away">—</div>
+      </div>
+      <div class="meta">
+        <div class="row"><span data-source="last_next" data-where="kind=next" data-field="dateLabel">—</span>·<span data-source="last_next" data-where="kind=next" data-field="comp">—</span>·<span data-source="last_next" data-where="kind=next" data-field="stage">—</span></div>
+        <div class="row" data-source="last_next" data-where="kind=next" data-field="notes">—</div>
+      </div>
+    </div>
+  </section>
+
+  <h3 class="sec">Πρωτάθλημα</h3>
+  <section class="grid" id="league">
+    <div class="card" id="standings-card">
+      <h2>Βαθμολογία Super League</h2>
+      <p class="note">Μετά από <span data-source="standings" data-where="team=Παναθηναϊκός" data-field="gp">—</span> αγωνιστικές. Περνώντας το ποντίκι πάνω από μια ομάδα βλέπεις τυχόν αφαιρέσεις βαθμών.</p>
+      <div class="tablebox" style="max-height:none">
+        <table id="standings-table" data-source="standings" data-row-key="team">
+          <thead><tr>
+            <th class="n" data-field="pos">#</th>
+            <th data-field="team">Ομάδα</th>
+            <th class="n" data-field="gp">Αγ.</th>
+            <th class="n opt" data-field="gf">Υπέρ</th>
+            <th class="n opt" data-field="ga">Κατά</th>
+            <th class="n" data-source="standings_gd" data-field="gdLabel">Διαφ.</th>
+            <th class="n" data-field="pts">Βαθ.</th>
+          </tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <h3 class="sec">Παίκτες · Super League</h3>
+  <section class="grid3" id="players">
+    <div class="card" id="scorers-card">
+      <h2>Σκόρερ</h2>
+      <p class="note">Γκολ στο πρωτάθλημα· σε παρένθεση τα πέναλτι.</p>
+      <div class="chart dash-skeleton" id="scorers-chart" data-source="players" style="min-height:200px"></div>
+    </div>
+    <div class="card" id="assists-card">
+      <h2>Ασίστ</h2>
+      <p class="note">Τελικές πάσες για γκολ στο πρωτάθλημα.</p>
+      <div class="chart dash-skeleton" id="assists-chart" data-source="players" style="min-height:160px"></div>
+    </div>
+  </section>
+
+  <h3 class="sec">Conference League</h3>
+  <section class="grid" id="conference">
+    <div class="card" id="conference-card">
+      <h2>Βαθμολογία league phase</h2>
+      <p class="note">36 ομάδες, 6 αγώνες η καθεμία. Ο Παναθηναϊκός είναι <b><span data-source="conference" data-where="team=Panathinaikos" data-field="pos">—</span>ος</b> με <span data-source="conference" data-where="team=Panathinaikos" data-field="pts">—</span> βαθμούς μετά από <span data-source="conference" data-where="team=Panathinaikos" data-field="gp">—</span> αγώνα/ες.</p>
+      <div class="legend"><span><i class="z1"></i>1–8: απευθείας στους 16</span><span><i class="z2"></i>9–24: play-off νοκ άουτ</span><span><i class="z3"></i>25–36: αποκλεισμός</span></div>
+      <div class="tablebox">
+        <table id="conference-table" data-source="conference" data-row-key="team">
+          <thead><tr>
+            <th class="n" data-field="pos">#</th>
+            <th data-field="team">Ομάδα</th>
+            <th class="n" data-field="gp">Αγ.</th>
+            <th class="n opt" data-field="w">Ν</th>
+            <th class="n opt" data-field="d">Ι</th>
+            <th class="n opt" data-field="l">Η</th>
+            <th class="n" data-field="gf">Υπέρ</th>
+            <th class="n" data-field="ga">Κατά</th>
+            <th class="n" data-field="pts">Βαθ.</th>
+          </tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+    <div class="card" id="conference-fixtures-card">
+      <h2>Πρόγραμμα στο Conference League</h2>
+      <p class="note">Όλοι οι αγώνες της league phase. Ώρες Ελλάδας.</p>
+      <div class="tablebox">
+        <table id="conf-fixtures-table" data-source="match_rows" data-row-key="id">
+          <thead><tr>
+            <th data-field="stage">Αγωνιστική</th>
+            <th data-field="dateLabel">Ημ/νία</th>
+            <th data-field="opponent">Αντίπαλος</th>
+            <th data-field="venue">Έδρα</th>
+            <th class="n" data-field="score">Σκορ</th>
+            <th class="n opt" data-field="time">Ώρα</th>
+          </tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <h3 class="sec">Πρόγραμμα &amp; αποτελέσματα</h3>
+  <section class="grid" id="schedule">
+    <div class="card" id="fixtures-card">
+      <h2>Επόμενοι αγώνες</h2>
+      <p class="note">Ώρες Ελλάδας, όπως τις δίνει ο σύλλογος.</p>
+      <div class="tablebox">
+        <table id="fixtures-table" data-source="match_rows" data-row-key="id">
+          <thead><tr>
+            <th data-field="dateLabel">Ημ/νία</th>
+            <th class="n" data-field="time">Ώρα</th>
+            <th data-field="opponent">Αντίπαλος</th>
+            <th data-field="venue">Έδρα</th>
+            <th class="opt" data-field="comp">Διοργάνωση</th>
+          </tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+    <div class="card" id="results-card">
+      <h2>Αποτελέσματα σεζόν</h2>
+      <p class="note">Επίσημοι αγώνες (χωρίς φιλικά). Το σκορ γράφεται γηπεδούχος–φιλοξενούμενος.</p>
+      <div class="filters" id="res-filters">
+        <button type="button" data-comp="" aria-pressed="true">Όλες</button>
+        <button type="button" data-comp="Super League" aria-pressed="false">Super League</button>
+        <button type="button" data-comp="Conference League" aria-pressed="false">Conference League</button>
+        <button type="button" data-comp="Κύπελλο Ελλάδας" aria-pressed="false">Κύπελλο</button>
+      </div>
+      <div class="tablebox">
+        <table id="results-table" data-source="match_rows" data-row-key="id">
+          <thead><tr>
+            <th data-field="dateLabel">Ημ/νία</th>
+            <th data-field="opponent">Αντίπαλος</th>
+            <th data-field="venue">Έδρα</th>
+            <th class="n" data-field="score">Σκορ</th>
+            <th data-field="res">Αποτ.</th>
+            <th class="opt" data-field="stage">Φάση</th>
+          </tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <p class="foot" id="foot">Πηγές: pao.gr, sdna.gr, gazzetta.gr, onsports.gr, aiscore.com, terrikon.com. Ανανεώνεται αυτόματα κάθε Δευτέρα και Παρασκευή στις 08:00. Η ημερομηνία κάθε ενημέρωσης φαίνεται στις Πηγές. Ένα από τα 12 γκολ του πρωταθλήματος δεν αποδίδεται σε παίκτη στην πηγή (πιθανό αυτογκόλ).</p>
+</div>
+
+<script>
+dash.calc('match_rows', {
+  inputs: ['matches'],
+  title: 'Αγώνες Παναθηναϊκού',
+  description: 'Κάθε αγώνας με αντίπαλο, έδρα, σκορ και αποτέλεσμα (Ν/Ι/Η) από τη σκοπιά του Παναθηναϊκού.',
+  fn: (matches) => {
+    const P = 'Παναθηναϊκός';
+    const df = new Intl.DateTimeFormat('el-GR', { timeZone: 'UTC', weekday: 'short', day: 'numeric', month: 'short' });
+    const labels = { 'Ν': 'Νίκη', 'Ι': 'Ισοπαλία', 'Η': 'Ήττα' };
+    return matches.map((m) => {
+      const atHome = m.home === P;
+      const played = m.status === 'played';
+      const hg = played ? Number(m.hg) : null;
+      const ag = played ? Number(m.ag) : null;
+      const gf = played ? (atHome ? hg : ag) : null;
+      const ga = played ? (atHome ? ag : hg) : null;
+      const res = !played ? '' : gf > ga ? 'Ν' : gf < ga ? 'Η' : 'Ι';
+      return {
+        id: m.id, date: m.date, dateLabel: df.format(new Date(m.date + 'T00:00:00Z')), time: m.time || '',
+        comp: m.comp, stage: m.stage, status: m.status, home: m.home, away: m.away,
+        opponent: atHome ? m.away : m.home, venue: atHome ? 'Εντός' : 'Εκτός',
+        hg, ag, gf, ga, score: played ? hg + '–' + ag : '', res, resLabel: labels[res] || '', notes: m.notes || ''
+      };
+    }).sort((a, b) => (a.date < b.date ? -1 : a.date > b.date ? 1 : 0));
+  }
+});
+
+dash.calc('last_next', {
+  inputs: ['match_rows'],
+  title: 'Τελευταίος και επόμενος αγώνας',
+  description: 'Ο πιο πρόσφατος αγώνας που έχει παιχτεί και ο πρώτος που δεν έχει παιχτεί ακόμη.',
+  fn: (match_rows) => {
+    const played = match_rows.filter((m) => m.status === 'played');
+    const upcoming = match_rows.filter((m) => m.status !== 'played');
+    const out = [];
+    if (played.length) out.push(Object.assign({ kind: 'last' }, played[played.length - 1]));
+    if (upcoming.length) out.push(Object.assign({ kind: 'next' }, upcoming[0]));
+    return out;
+  }
+});
+
+dash.calc('form5', {
+  inputs: ['match_rows'],
+  title: 'Φόρμα 5 αγώνων',
+  description: 'Οι πέντε πιο πρόσφατοι επίσημοι αγώνες, σε όλες τις διοργανώσεις, νεότερος πρώτος.',
+  fn: (match_rows) => match_rows.filter((m) => m.status === 'played').slice(-5).reverse()
+});
+
+dash.calc('pao_record', {
+  inputs: ['match_rows'],
+  title: 'Ρεκόρ στο πρωτάθλημα',
+  description: 'Νίκες, ισοπαλίες, ήττες, βαθμοί ανά αγώνα, εντός/εκτός και αγώνες χωρίς παθητικό στη Super League.',
+  fn: (match_rows) => {
+    const lg = match_rows.filter((m) => m.status === 'played' && m.comp === 'Super League');
+    const c = (arr, r) => arr.filter((m) => m.res === r).length;
+    const rec = (arr) => c(arr, 'Ν') + '-' + c(arr, 'Ι') + '-' + c(arr, 'Η');
+    const w = c(lg, 'Ν'), d = c(lg, 'Ι'), l = c(lg, 'Η');
+    const ppg = lg.length ? Math.round(((3 * w + d) / lg.length) * 100) / 100 : 0;
+    return [{
+      w, d, l, gf: lg.reduce((t, m) => t + m.gf, 0), ga: lg.reduce((t, m) => t + m.ga, 0),
+      cs: lg.filter((m) => m.ga === 0).length, ppg: ppg.toFixed(2).replace('.', ','),
+      homeRec: rec(lg.filter((m) => m.venue === 'Εντός')), awayRec: rec(lg.filter((m) => m.venue === 'Εκτός'))
+    }];
+  }
+});
+
+dash.calc('league_gap', {
+  inputs: ['standings'],
+  title: 'Απόσταση στην κορυφή',
+  description: 'Διαφορά βαθμών του Παναθηναϊκού από τον 2ο (αν είναι 1ος) ή από τον 1ο.',
+  fn: (standings) => {
+    const rows = standings.slice().sort((a, b) => a.pos - b.pos);
+    const me = rows.find((r) => r.team === 'Παναθηναϊκός');
+    if (!me) return [];
+    const other = me.pos === 1 ? rows[1] : rows[0];
+    const diff = me.pts - other.pts;
+    const n = Math.abs(diff);
+    const word = n === 1 ? 'βαθμό' : 'βαθμούς';
+    return [{ lead: n + ' ' + word, vs: me.pos === 1 ? 'μπροστά από τον 2ο (' + other.team + ')' : (diff >= 0 ? 'ισόβαθμος με τον 1ο (' : 'πίσω από τον 1ο (') + other.team + ')', diff }];
+  }
+});
+
+dash.calc('standings_gd', {
+  inputs: ['standings'],
+  title: 'Διαφορά τερμάτων',
+  description: 'Γκολ υπέρ μείον γκολ κατά για κάθε ομάδα.',
+  fn: (standings) => standings.map((r) => {
+    const gd = r.gf - r.ga;
+    return { team: r.team, gd, gdLabel: (gd > 0 ? '+' : '') + gd };
+  })
+});
+
+(function () {
+  const root = document.querySelector('.pao');
+  const P = 'Παναθηναϊκός';
+  let compFilter = '';
+  let animated = false;
+
+  const ok = (id) => dash.data(id).status === 'ok';
+  const rowsOf = (id) => (ok(id) ? dash.data(id).data || [] : []);
+  const failedLine = (el) => { el.replaceChildren(); const d = document.createElement('div'); d.className = 'failed'; d.textContent = 'Δεν φορτώθηκε'; el.appendChild(d); };
+
+  function findRow(rows, el) {
+    if (el.dataset.row != null) return rows[Number(el.dataset.row)];
+    if (el.dataset.where) {
+      const conds = el.dataset.where.split('&').map((p) => p.split('=').map(decodeURIComponent));
+      return rows.find((r) => conds.every(([k, v]) => String(r[k]) === v));
+    }
+    return rows[0];
+  }
+
+  function fillMarks() {
+    root.querySelectorAll('[data-source][data-field]').forEach((el) => {
+      if (el.closest('table') || el.tagName === 'TH') return;
+      const id = el.dataset.source;
+      const st = dash.data(id).status;
+      if (st === 'ok') {
+        const r = findRow(dash.data(id).data || [], el);
+        const v = r ? r[el.dataset.field] : null;
+        el.textContent = v == null || v === '' ? '—' : String(v);
+        el.classList.remove('dash-skeleton');
+      } else if (st === 'loading') {
+        el.textContent = '—';
+      } else {
+        el.textContent = '—';
+        el.classList.remove('dash-skeleton');
+      }
+    });
+    const res = root.querySelector('#last-res');
+    const last = rowsOf('last_next').find((r) => r.kind === 'last');
+    res.className = 'chip' + (last ? ' r-' + last.res : '');
+    const next = rowsOf('last_next').find((r) => r.kind === 'next');
+    const cd = root.querySelector('#countdown');
+    if (next) {
+      const today = new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Athens' }).format(new Date());
+      const days = Math.round((Date.parse(next.date + 'T00:00:00Z') - Date.parse(today + 'T00:00:00Z')) / 86400000);
+      cd.textContent = days <= 0 ? 'Σήμερα' : days === 1 ? 'Αύριο' : 'Σε ' + days + ' ημέρες';
+      cd.hidden = false;
+    } else { cd.hidden = true; }
+  }
+
+  function drawForm() {
+    const el = root.querySelector('#form5');
+    const st = dash.data('form5').status;
+    if (st !== 'ok') { if (st === 'error') failedLine(el); else el.replaceChildren(); return; }
+    el.replaceChildren();
+    dash.data('form5').data.forEach((m) => {
+      const f = document.createElement('div'); f.className = 'f';
+      const dot = document.createElement('div'); dot.className = 'dot r-' + m.res; dot.textContent = m.res;
+      const cap = document.createElement('div'); cap.className = 'cap'; cap.textContent = m.score;
+      f.title = m.dateLabel + ' · ' + m.opponent + ' (' + m.venue.toLowerCase() + ') ' + m.score;
+      f.append(dot, cap); el.appendChild(f);
+    });
+  }
+
+  function fillTable(sel, srcId, rows, cols, keyOf, rowClass) {
+    const table = root.querySelector(sel);
+    const tbody = table.querySelector('tbody');
+    tbody.replaceChildren();
+    const st = dash.data(srcId).status;
+    if (st !== 'ok') {
+      const tr = document.createElement('tr'); const td = document.createElement('td');
+      td.colSpan = cols.length; td.style.height = '6rem';
+      if (st === 'error') failedLine(td); else td.className = 'dash-skeleton';
+      tr.appendChild(td); tbody.appendChild(tr); return;
+    }
+    rows.forEach((r) => {
+      const tr = document.createElement('tr');
+      tr.dataset.key = keyOf(r);
+      if (rowClass) tr.className = rowClass(r) || '';
+      cols.forEach((c) => {
+        const td = document.createElement('td');
+        if (c.cls) td.className = c.cls;
+        if (c.title) { const t = c.title(r); if (t) td.title = t; }
+        const v = c.get(r);
+        if (c.chip && v) { const s = document.createElement('span'); s.className = 'chip r-' + v; s.textContent = v; td.appendChild(s); }
+        else td.textContent = v == null || v === '' ? '—' : String(v);
+        tr.appendChild(td);
+      });
+      tbody.appendChild(tr);
+    });
+  }
+
+  function drawTables() {
+    const gd = new Map(rowsOf('standings_gd').map((r) => [r.team, r.gdLabel]));
+    const standings = rowsOf('standings').slice().sort((a, b) => a.pos - b.pos);
+    fillTable('#standings-table', 'standings', standings, [
+      { get: (r) => r.pos, cls: 'n' }, { get: (r) => r.team, title: (r) => r.note || '' }, { get: (r) => r.gp, cls: 'n' },
+      { get: (r) => r.gf, cls: 'n opt' }, { get: (r) => r.ga, cls: 'n opt' },
+      { get: (r) => gd.get(r.team), cls: 'n' }, { get: (r) => r.pts, cls: 'n' }
+    ], (r) => r.team, (r) => (r.team === P ? 'me' : ''));
+
+    const conf = rowsOf('conference').slice().sort((a, b) => a.pos - b.pos);
+    fillTable('#conference-table', 'conference', conf, [
+      { get: (r) => r.pos, cls: 'n' }, { get: (r) => r.team }, { get: (r) => r.gp, cls: 'n' },
+      { get: (r) => r.w, cls: 'n opt' }, { get: (r) => r.d, cls: 'n opt' }, { get: (r) => r.l, cls: 'n opt' },
+      { get: (r) => r.gf, cls: 'n' }, { get: (r) => r.ga, cls: 'n' }, { get: (r) => r.pts, cls: 'n' }
+    ], (r) => r.team, (r) => (r.pos <= 8 ? 'zone1' : r.pos <= 24 ? 'zone2' : 'zone3') + (r.team === 'Panathinaikos' ? ' me' : ''));
+
+    const mr = rowsOf('match_rows');
+    fillTable('#conf-fixtures-table', 'match_rows', mr.filter((m) => m.comp === 'Conference League' && /League phase/.test(m.stage)), [
+      { get: (r) => r.stage.replace('League phase · ', '') }, { get: (r) => r.dateLabel }, { get: (r) => r.opponent }, { get: (r) => r.venue },
+      { get: (r) => r.score }, { get: (r) => r.time, cls: 'n opt' }
+    ], (r) => r.id);
+    fillTable('#fixtures-table', 'match_rows', mr.filter((m) => m.status !== 'played'), [
+      { get: (r) => r.dateLabel }, { get: (r) => r.time, cls: 'n' }, { get: (r) => r.opponent }, { get: (r) => r.venue }, { get: (r) => r.comp, cls: 'opt' }
+    ], (r) => r.id);
+    fillTable('#results-table', 'match_rows', mr.filter((m) => m.status === 'played' && (!compFilter || m.comp === compFilter)).reverse(), [
+      { get: (r) => r.dateLabel }, { get: (r) => r.opponent }, { get: (r) => r.venue }, { get: (r) => r.score, cls: 'n' },
+      { get: (r) => r.res, chip: true }, { get: (r) => r.stage, cls: 'opt wrap' }
+    ], (r) => r.id);
+  }
+
+  function tipAt(box, tip, html, x, y) {
+    tip.replaceChildren(...html);
+    tip.style.opacity = 1;
+    const bw = box.clientWidth, tw = tip.offsetWidth, th = tip.offsetHeight;
+    let left = x + 12; if (left + tw > bw) left = x - tw - 12; if (left < 0) left = 0;
+    let top = y - th - 8; if (top < 0) top = y + 12;
+    tip.style.left = left + 'px'; tip.style.top = top + 'px';
+  }
+  const line = (cls, text) => { const d = document.createElement('div'); if (cls) d.className = cls; d.textContent = text; return d; };
+
+  function measure(svg, texts) {
+    const t = svg.append('text').attr('font-size', 12).style('font-family', 'var(--font-anthropic-sans)');
+    let w = 0; texts.forEach((s) => { t.text(s); w = Math.max(w, t.node().getComputedTextLength()); });
+    t.remove(); return w;
+  }
+
+
+  function drawBars(sel, field, extra) {
+    const box = root.querySelector(sel);
+    const st = dash.data('players').status;
+    box.replaceChildren();
+    if (st !== 'ok') { if (st === 'error') { box.classList.remove('dash-skeleton'); failedLine(box); } return; }
+    box.classList.remove('dash-skeleton');
+    const data = dash.data('players').data.filter((p) => Number(p[field]) > 0).sort((a, b) => b[field] - a[field] || (a.player < b.player ? -1 : 1));
+    const W = box.clientWidth || 300, rowH = 30, H = data.length * rowH + 8;
+    const svg = d3.select(box).append('svg').attr('width', '100%').attr('viewBox', `0 0 ${W} ${H}`).style('display', 'block');
+    const ml = Math.min(W * 0.5, measure(svg, data.map((d) => d.player)) + 10);
+    const labels = data.map((d) => String(d[field]) + (extra ? extra(d) : ''));
+    const mr = measure(svg, labels) + 10;
+    const x = d3.scaleLinear([0, d3.max(data, (d) => Number(d[field])) || 1], [ml, W - mr]);
+    const yb = d3.scaleBand(data.map((d) => d.player), [4, H - 4]).padding(0.3);
+    const g = svg.append('g');
+    g.selectAll('text.name').data(data).join('text').attr('x', ml - 8).attr('y', (d) => yb(d.player) + yb.bandwidth() / 2).attr('dy', '0.32em').attr('text-anchor', 'end').attr('font-size', 12).attr('fill', 'var(--color-fg)').text((d) => d.player);
+    const bars = g.selectAll('rect.bar').data(data).join('rect').attr('x', ml).attr('y', (d) => yb(d.player)).attr('height', Math.min(yb.bandwidth(), 20)).attr('rx', 4).attr('fill', dash.colors[0])
+      .attr('width', (d) => Math.max(2, x(Number(d[field])) - ml));
+    g.selectAll('text.v').data(data).join('text').attr('x', (d) => x(Number(d[field])) + 6).attr('y', (d) => yb(d.player) + Math.min(yb.bandwidth(), 20) / 2).attr('dy', '0.32em').attr('font-size', 12).attr('fill', 'var(--color-fg-muted)').style('font-variant-numeric', 'tabular-nums').text((d, i) => labels[i]);
+    const tip = document.createElement('div'); tip.className = 'tip'; box.appendChild(tip);
+    g.selectAll('rect.hit').data(data).join('rect').attr('x', 0).attr('width', W).attr('y', (d) => yb(d.player) - yb.step() * yb.paddingInner() / 2).attr('height', yb.step()).attr('fill', 'transparent')
+      .on('mousemove', (ev, d) => {
+        bars.attr('opacity', (o) => (o === d ? 1 : 0.45));
+        const [px, py] = d3.pointer(ev, box);
+        const ls = [line('k', d.player), line('', 'Γκολ: ' + d.goals + (Number(d.penalties) ? ' (' + d.penalties + ' πέν.)' : '')), line('', 'Ασίστ: ' + d.assists)];
+        if (d.apps != null) ls.push(line('', 'Συμμετοχές: ' + d.apps));
+        tipAt(box, tip, ls, px, py);
+      })
+      .on('mouseleave', () => { tip.style.opacity = 0; bars.attr('opacity', 1); });
+  }
+
+  // On-demand refresh: fires the owner's scheduled task through the Claude Code Remote connector.
+  const TASK_ID = 'trig_016vC7HFaGmiefNwX2KzwTSQ';
+  (async () => {
+    const [mcp, user] = await Promise.all([claude.use('mcp'), claude.use('user')]);
+    const canEdit = user ? (user.isOwner() || user.canEdit()) : false;
+    if (!mcp || !canEdit) return;
+    const wrap = root.querySelector('#refresh');
+    const btn = root.querySelector('#refresh-btn');
+    const msg = root.querySelector('#refresh-msg');
+    wrap.hidden = false;
+    btn.addEventListener('click', async () => {
+      btn.disabled = true;
+      msg.textContent = 'Ξεκινάει η ανανέωση…';
+      try {
+        await mcp.callTool('Claude Code Remote', 'fire_trigger', { trigger_id: TASK_ID }, { cache: false });
+        msg.textContent = 'Η ανανέωση ξεκίνησε. Τα νέα στοιχεία θα εμφανιστούν σε 5–10 λεπτά.';
+        setTimeout(() => { btn.disabled = false; }, 120000);
+      } catch (e) {
+        btn.disabled = false;
+        const code = e && e.code;
+        msg.textContent = code === 'not_granted' || code === 'declined'
+          ? 'Χρειάζεται άδεια για τη σύνδεση Claude Code Remote.'
+          : code === 'server_not_connected' || code === 'not_in_manifest'
+            ? 'Η σύνδεση Claude Code Remote δεν είναι διαθέσιμη εδώ.'
+            : 'Η ανανέωση δεν ξεκίνησε. Δοκίμασε ξανά σε λίγο.';
+      }
+    });
+  })();
+
+  root.querySelectorAll('#res-filters button').forEach((b) => b.addEventListener('click', () => {
+    compFilter = b.dataset.comp;
+    root.querySelectorAll('#res-filters button').forEach((o) => o.setAttribute('aria-pressed', String(o === b)));
+    drawTables();
+  }));
+
+  dash.onData(() => {
+    fillMarks();
+    drawForm();
+    drawTables();
+    drawBars('#scorers-chart', 'goals', (d) => (Number(d.penalties) ? ' (' + d.penalties + ')' : ''));
+    drawBars('#assists-chart', 'assists');
+  });
+})();
+</script>

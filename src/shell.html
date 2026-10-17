@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="el">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Παναθηναϊκός 2026–27</title>
+<meta name="description" content="Βαθμολογία, φόρμα, αγώνες και στατιστικά του Παναθηναϊκού στη σεζόν 2026–27.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='15' fill='%23137a45'/%3E%3Cpath d='M16 6l3 7h7l-5.6 4.3 2.1 7L16 20l-6.5 4.3 2.1-7L6 13h7z' fill='%23fff'/%3E%3C/svg%3E">
+<style>
+:root{
+  --color-fg:#15181c;--color-fg-muted:#5d646d;--color-bg:#f4f6f3;--color-panel:#ffffff;--color-border-line:#e1e5e0;
+  --color-ok:#137a45;--color-warn:#a36200;--color-bad:#c0392b;
+  --font-anthropic-sans:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --font-anthropic-serif:Georgia,"Times New Roman",serif;
+  --cds-font-size-caption:12px;--cds-font-size-body:14px;--cds-font-size-heading:16px;--cds-font-size-title:30px;--cds-font-weight-medium:600;
+  --cds-gap-xs:4px;--cds-gap-sm:8px;--cds-gap-md:14px;--cds-gap-lg:22px;--cds-gap-xl:32px;
+  --cds-pad-xs:4px;--cds-pad-sm:8px;--cds-pad-md:12px;--cds-pad-lg:18px;--cds-radius:12px;
+  --cds-chart-grid:#e8ebe7;--cds-chart-axis:#c9cec8;--cds-chart-muted:#b4bab3;--cds-chart-reference:#9aa19a;
+  --cds-surface-popover:#ffffff;--cds-border:#dfe3de;--cds-shadow-popover:0 6px 20px rgba(0,0,0,.12);--cds-text-secondary:#5d646d;
+  --cds-dur-slow:.3s;--pao-accent:#137a45;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --color-fg:#eceeea;--color-fg-muted:#a1a8a0;--color-bg:#111412;--color-panel:#1a1e1b;--color-border-line:#2b312c;
+  --color-ok:#4cc483;--color-warn:#e5a53b;--color-bad:#f07167;
+  --cds-chart-grid:#262b27;--cds-chart-axis:#3a413b;--cds-chart-muted:#535b54;--cds-chart-reference:#6d756e;
+  --cds-surface-popover:#222723;--cds-border:#343b35;--cds-shadow-popover:0 6px 20px rgba(0,0,0,.5);--cds-text-secondary:#a1a8a0;--pao-accent:#4cc483;
+}}
+:root[data-theme="dark"]{
+  --color-fg:#eceeea;--color-fg-muted:#a1a8a0;--color-bg:#111412;--color-panel:#1a1e1b;--color-border-line:#2b312c;
+  --color-ok:#4cc483;--color-warn:#e5a53b;--color-bad:#f07167;
+  --cds-chart-grid:#262b27;--cds-chart-axis:#3a413b;--cds-chart-muted:#535b54;--cds-chart-reference:#6d756e;
+  --cds-surface-popover:#222723;--cds-border:#343b35;--cds-shadow-popover:0 6px 20px rgba(0,0,0,.5);--cds-text-secondary:#a1a8a0;--pao-accent:#4cc483;
+}
+html,body{margin:0;background:var(--color-bg);color:var(--color-fg);font-family:var(--font-anthropic-sans)}
+#dash-root{padding:clamp(16px,3vw,40px) clamp(16px,3vw,40px) 48px;box-sizing:border-box}
+#dash-root *,#dash-root *::before,#dash-root *::after{box-sizing:border-box}
+.stamp{font-size:12px;color:var(--color-fg-muted);max-width:84rem;margin:0 auto 12px}
+</style>
+</head>
+<body>
+<script>%%D3%%</script>
+<div id="dash-root">
+<div class="stamp">Τελευταία ενημέρωση: <span>%%UPDATED%%</span></div>
+<script>
+window.__DATA__ = %%DATA%%;
+window.claude = { use: async () => null };
+(function () {
+  const calcs = {}, order = [], store = {}, cbs = [];
+  const get = (id) => Object.prototype.hasOwnProperty.call(window.__DATA__, id)
+    ? { status: 'ok', data: window.__DATA__[id], meta: [], refreshing: false }
+    : (store[id] || { status: 'missing', data: [], meta: [] });
+  const run = (id) => {
+    const c = calcs[id];
+    try { store[id] = { status: 'ok', data: c.fn(...c.inputs.map((i) => get(i).data)), meta: [] }; }
+    catch (e) { store[id] = { status: 'error', data: [], message: String(e), meta: [] }; console.error(id, e); }
+  };
+  const css = getComputedStyle(document.documentElement);
+  window.dash = {
+    data: get,
+    calc(id, o) { calcs[id] = o; order.push(id); run(id); },
+    loader() {},
+    onData(fn) { cbs.push(fn); try { fn(); } catch (e) { console.error(e); } },
+    colors: [css.getPropertyValue('--pao-accent').trim() || '#137a45', '#6b7280', '#a36200', '#2563eb', '#9333ea', '#0891b2', '#be185d', '#65a30d'],
+    refresh() {}, params() { return {}; }, setParams() {}, resetParams() {}, setLink() {}
+  };
+  let t; addEventListener('resize', () => { clearTimeout(t); t = setTimeout(() => cbs.forEach((f) => f()), 120); });
+})();
+</script>
+%%PAGE%%
+</div>
+</body>
+</html>
